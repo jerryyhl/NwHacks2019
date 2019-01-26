@@ -1,0 +1,23 @@
+Hardware Based Password Manager
+- Key features:
+	- Finger print scanner to unlock device
+		- Maybe camera and facial recognition?
+		- Maybe pin pad thing just in case device fails
+	- Generates secure random passwords for individual sites
+		- use some analog environmental sensor maybe?
+	- Arduino or Qualcomm based hardware that will connect to computer through USB and outputs password
+		- Would be cool to automatically outputs password based on current browser URL
+		- Easier way would be to select password for site using joystick control
+	- Encrypt password on device and backup on cloud or local file
+
+- Optional but cool features:
+	- Unlock device through pairing with a personal phone
+	- Act as a bluetooth/usb device and work on phones
+	- Connect to computer through bluetooth instead of physical USB connection
+	- 
+
+
+Backup ideas:
+- Finger printer scanner/facial recognition smart door
+	- camera that takes pictures to send to phone to see who's at the door
+- Snapchat spectacle type glasses 
