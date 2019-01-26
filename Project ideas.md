@@ -1,3 +1,5 @@
+# Jerry
+
 Hardware Based Password Manager
 - Key features:
 	- Finger print scanner to unlock device
@@ -21,3 +23,19 @@ Backup ideas:
 - Finger printer scanner/facial recognition smart door
 	- camera that takes pictures to send to phone to see who's at the door
 - Snapchat spectacle type glasses 
+
+# Mason
+A hardware wallet that uses a fingerprint scanner to unlock. After it unlocks, it uses USB Keyboard API to output the password. The website that you are on can be selected by using the joystick and the screen attached. 
+
+The board has a random generator and generates new random passwords for each site. 
+
+We were also thinking about using facial recognition and a pin (0-9)x4 digits.
+
+Dump all passwords to computer.
+Dump all passwords to comptuer but encrypted.
+
+Use Analog pin to generate random data.
+
+Perhaps be able to backup passwords to a cloud database.
+
+There should be some way that a user can tag new sites/send them to their arduino so that they can select them on the arduino screen.
