@@ -3,6 +3,7 @@ from flask import Flask, request, send_from_directory
 import coms
 import generate
 import os
+import json
 
 # set the project root directory as the static folder, you can set others.
 app = Flask(__name__, static_folder='')
@@ -27,7 +28,7 @@ def redirect_to_index():
 
 @app.route('/get-all-labels')
 def get_all_labels():
-    return ["Microsoft", "Google", "Amazon"]
+    return json.dumps(["Microsoft", "Google", "Amazon"])
 
 
 @app.route('/generate/<label_name>')
@@ -38,10 +39,10 @@ def generate_password(label_name):
 
 
 @app.route('/to-keyboard/<label_name>')
-def send_to_keyboard (label_name):
+def send_to_keyboard(label_name):
     print(generate.generate_password(), label_name)
     # TODO Decrypt Password assotiated with the Label name and send it to the keyboard
-    coms.send_message("THIS IS A PASSWORD")
+    # coms.send_message("THIS IS A PASSWORD")
     return "Ok"
 
 
