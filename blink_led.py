@@ -18,8 +18,8 @@ try:
         Pin27.high()
 #       else:
         time.sleep(1)
-        Pin27.low()
-        time.sleep(1)
+#       Pin27.low()
+#       time.sleep(1)
 
 finally:
     GP.cleanup()
