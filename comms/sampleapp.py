@@ -32,47 +32,54 @@ def redirect_to_index():
 
 @app.route('/get-all-labels')
 def get_all_labels():
-    fo = open(FILENAME, "a+")
-    readfile = fo.read().split('\n')
-    labels = []
-    for row in readfile:
-        labels.append(row.split(",")[0])
-    return json.dumps(labels)
+    try:
+        with open(FILENAME, "r") as fo:
+            readfile = fo.read().split('\n')
+            print(readfile)
+            labels = []
+            for row in readfile:
+                print(row)
+                labels.append(row.split(",")[0])
+            return json.dumps(labels)
+    except:
+        return json.dumps([])
+
 
 
 @app.route('/generate/<label_name>')
 def generate_password(label_name):
-    print(generate.generate_password(), label_name)
+    new_pass = generate.generate_password()
     # TODO Encrypt New Generated Password and Save it.
-    cipher = blowfish.Cipher(KEY)
-    data_encrypted = b"".join(cipher.encrypt_ecb(bytes(generate.generate_password(), 'utf-8')))
-    data_encrypted = base64.b64encode(data_encrypted)
+    # cipher = blowfish.Cipher(KEY)
+    # data_encrypted = b"".join(cipher.encrypt_ecb(bytes(generate.generate_password(), 'utf-8')))
+    # data_encrypted = base64.b64encode(data_encrypted)
     fo = open(FILENAME, "a")
-    fo.write(label_name + "," + data_encrypted + '\n')
+    # fo.write(label_name + "," + data_encrypted + '\n')
+    fo.write(label_name + "," + new_pass + '\n')
     fo.close()
     return "Ok"
 
 
 @app.route('/to-keyboard/<label_name>')
 def send_to_keyboard(label_name):
-    print(generate.generate_password(), label_name)
     # TODO Decrypt Password assotiated with the Label name and send it to the keyboard
-    fo = open(FILENAME, "a+")
-    readfile = fo.read().split('\n')
-    for row in readfile:
-        if label_name == row.split(",")[0]:
-            cipher = blowfish.Cipher(KEY)
-            data_decrypted = b"".join(cipher.decrypt_ecb(base64.b64decode(row.split(",")[1])))
-            break
-    # coms.send_message(data_decrypted)
-    print(data_decrypted)
-    return "Ok"
+    with open(FILENAME, "r") as fo:
+        readfile = fo.read().split('\n')
+        for row in readfile:
+            if label_name != "":
+                if label_name == row.split(",")[0]:
+                    # cipher = blowfish.Cipher(KEY)
+                    # data_decrypted = b"".join(cipher.decrypt_ecb(base64.b64decode(row.split(",")[1])))
+                    # coms.send_message(row.split(",")[1])
+                    print(row.split(",")[1])
+                    break
+        return "Ok"
 
 
 @app.route('/unlock/<lock_code>')
 def unlock(lock_code):
     global locked
-    if lock_code == "1234":
+    if lock_code == PASSWORD:
         locked = False
         return "SUCCESS"
     return "FAIL"
