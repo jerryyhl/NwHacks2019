@@ -2,9 +2,10 @@ from flask import Flask, request, send_from_directory
 
 import coms
 import generate
+import os
 
 # set the project root directory as the static folder, you can set others.
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__, static_folder='')
 
 
 locked = True
@@ -12,9 +13,16 @@ locked = True
 PASSWORD = "1234"
 
 
-@app.route('/static')
-def send_file(filename):
-    return send_from_directory(app.static_folder, filename)
+root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+
+@app.route('/<path:path>', methods=['GET'])
+def static_proxy(path):
+    return send_from_directory(root, path)
+
+
+@app.route('/', methods=['GET'])
+def redirect_to_index():
+    return send_from_directory(root, 'index.html')
 
 
 @app.route('/get-all-labels')
@@ -35,7 +43,6 @@ def send_to_keyboard (label_name):
     # TODO Decrypt Password assotiated with the Label name and send it to the keyboard
     coms.send_message("THIS IS A PASSWORD")
     return "Ok"
-
 
 
 @app.route('/unlock/<lock_code>')
