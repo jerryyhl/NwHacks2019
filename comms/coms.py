@@ -42,9 +42,9 @@ try:
         print("clock low")
         time.sleep(0.2)
         if message[i] == 0:
-            pins["data"].high()
-        else:
             pins["data"].low()
+        else:
+            pins["data"].high()
         print("data: " + str(message[i]))
         time.sleep(0.2)
         pins["clock"].high()
