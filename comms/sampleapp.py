@@ -2,6 +2,7 @@ from flask import Flask, request, send_from_directory
 
 import coms
 import generate
+import blowfish
 import os
 import json
 
@@ -12,6 +13,8 @@ app = Flask(__name__, static_folder='')
 locked = True
 
 PASSWORD = "1234"
+KEY = b"MYKEY"
+FILENAME = "encrypted_pw.txt"
 
 
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
@@ -28,13 +31,23 @@ def redirect_to_index():
 
 @app.route('/get-all-labels')
 def get_all_labels():
-    return json.dumps(["Microsoft", "Google", "Amazon"])
+    fo = open(FILENAME, "r")
+    readfile = fo.read().split('\n')
+    labels = []
+    for row in readfile:
+        labels.append(row.split(",")[0])
+    return json.dumps(labels)
 
 
 @app.route('/generate/<label_name>')
 def generate_password(label_name):
     print(generate.generate_password(), label_name)
     # TODO Encrypt New Generated Password and Save it.
+    cipher = blowfish.Cipher(KEY)
+    data_encrypted = b"".join(cipher.encrypt_ecb(generate_password())
+    fo = open(FILENAME, "a")
+    fo.write(label_name + "," + data_encrypted.decode('utf-8') + '\n'))
+    fo.close()
     return "Ok"
 
 
@@ -42,7 +55,15 @@ def generate_password(label_name):
 def send_to_keyboard(label_name):
     print(generate.generate_password(), label_name)
     # TODO Decrypt Password assotiated with the Label name and send it to the keyboard
-    # coms.send_message("THIS IS A PASSWORD")
+    fo = open(FILENAME, "r")
+    readfile = fo.read().split('\n')
+    for row in readfile:
+        if label_name == row.split(",")[0]:
+            cipher = blowfish.Cipher(KEY)
+            data_decrypted = b"".join(cipher.decrypt_ecb(row.split(",")[1]).decode('utf-8')
+            break
+    # coms.send_message(data_decrypted)
+    print(data_decrypted)
     return "Ok"
 
 
