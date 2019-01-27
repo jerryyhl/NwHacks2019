@@ -1,7 +1,7 @@
-#from GPIOLibrary import GPIOProcessor
+from GPIOLibrary import GPIOProcessor
 import time
 
-#GP = GPIOProcessor()
+GP = GPIOProcessor()
 
 def setup_pins():
     pin31 = GP.getPin31()
