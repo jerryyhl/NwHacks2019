@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt-get install libmraa-dev cmake -y
+
 git clone https://github.com/intel-iot-devkit/mraa
 cd mraa
 mkdir build
