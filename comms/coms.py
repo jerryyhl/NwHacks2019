@@ -27,30 +27,33 @@ def convert_byte_to_array_of_bits(byte_to_convert):
         array_of_bits.append(get_bit_in_byte(byte_to_convert, i))
     return array_of_bits
 
+
 def convert_string_to_array_of_bits(string_to_convert):
     array_of_bits = []
     for letter in string_to_convert:
         array_of_bits.extend(convert_byte_to_array_of_bits(ord(letter)))
     return array_of_bits
 
-try:
-    pins = setup_pins()
 
-    message = convert_string_to_array_of_bits('abcd')
-    for i in range(len(message)):
-        pins["clock"].low()
-        print("clock low")
-        time.sleep(0.02)
-        if message[i] == 0:
-            pins["data"].low()
-        else:
-            pins["data"].high()
-        print("data: " + str(message[i]))
-        time.sleep(0.02)
-        pins["clock"].high()
-        print("high")
-        time.sleep(0.03)
+def send_message(message_string):
+    try:
+        pins = setup_pins()
 
-finally:
-    GP.cleanup()
+        message = convert_string_to_array_of_bits(message_string)
+        for i in range(len(message)):
+            pins["clock"].low()
+            print("clock low")
+            time.sleep(0.02)
+            if message[i] == 0:
+                pins["data"].low()
+            else:
+                pins["data"].high()
+            print("data: " + str(message[i]))
+            time.sleep(0.02)
+            pins["clock"].high()
+            print("high")
+            time.sleep(0.03)
+
+    finally:
+        GP.cleanup()
 
