@@ -4,15 +4,15 @@ import time
 GP = GPIOProcessor()
 
 try:
-    Pin34 = GP.getPin34()
-    Pin34.out()
+    Pin32 = GP.getPin32()
+    Pin32.out()
 
     while True:
-        Pin34.high()
-        print("beep")
+        Pin32.high()
+        print("high")
         time.sleep(1)
-        Pin34.low()
-        print("boop")
+        Pin32.low()
+        print("low")
         time.sleep(1)
 
 finally:
