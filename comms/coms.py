@@ -45,7 +45,7 @@ try:
             pins["data"].low()
         else:
             pins["data"].high()
-        print("data: " + message[i])
+        print("data: " + str(message[i]))
         time.sleep(0.2)
         pins["clock"].low()
         print("low")
