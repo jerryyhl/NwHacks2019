@@ -38,17 +38,17 @@ try:
 
     message = convert_string_to_array_of_bits('abcd')
     for i in range(len(message)):
-        pins["clock"].high()
-        print("clock high")
+        pins["clock"].low()
+        print("clock low")
         time.sleep(0.2)
         if message[i] == 0:
-            pins["data"].low()
-        else:
             pins["data"].high()
+        else:
+            pins["data"].low()
         print("data: " + str(message[i]))
         time.sleep(0.2)
-        pins["clock"].low()
-        print("low")
+        pins["clock"].high()
+        print("high")
         time.sleep(0.3)
 
 finally:
