@@ -69,16 +69,24 @@ def send_to_keyboard(label_name):
 
 @app.route('/unlock/<lock_code>')
 def unlock(lock_code):
+    global locked
     if lock_code == "1234":
         locked = False
-    return "Ok"
+        return "SUCCESS"
+    return "FAIL"
 
 
 @app.route('/lock')
 def lock():
+    global locked
     locked = True
     return "Ok"
 
+
+@app.route('/is-locked')
+def isLocked():
+    global locked
+    return json.dumps({"locked": locked})
 
 
 if __name__ == "__main__":
