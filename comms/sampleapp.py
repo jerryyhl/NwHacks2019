@@ -5,6 +5,7 @@ import generate
 import blowfish
 import os
 import json
+import base64
 
 # set the project root directory as the static folder, you can set others.
 app = Flask(__name__, static_folder='')
@@ -45,8 +46,9 @@ def generate_password(label_name):
     # TODO Encrypt New Generated Password and Save it.
     cipher = blowfish.Cipher(KEY)
     data_encrypted = b"".join(cipher.encrypt_ecb(bytes(generate.generate_password(), 'utf-8')))
+    data_encrypted = base64.b64encode(data_encrypted)
     fo = open(FILENAME, "a")
-    fo.write(label_name + "," + data_encrypted.decode('utf-8') + '\n')
+    fo.write(label_name + "," + data_encrypted + '\n')
     fo.close()
     return "Ok"
 
@@ -60,7 +62,7 @@ def send_to_keyboard(label_name):
     for row in readfile:
         if label_name == row.split(",")[0]:
             cipher = blowfish.Cipher(KEY)
-            data_decrypted = b"".join(cipher.decrypt_ecb(row.split(",")[1]).decode('utf-8'))
+            data_decrypted = b"".join(cipher.decrypt_ecb(base64.b64decode(row.split(",")[1])))
             break
     # coms.send_message(data_decrypted)
     print(data_decrypted)
