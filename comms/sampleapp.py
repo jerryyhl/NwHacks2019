@@ -30,7 +30,12 @@ def redirect_to_index():
 
 @app.route('/get-all-labels')
 def get_all_labels():
-    return ["Microsoft", "Google", "Amazon"]
+    fo = open(FILENAME, "r")
+    readfile = fo.read().split('\n')
+    labels = []
+    for row in readfile:
+        labels.append(row.split(",")[0])
+    return labels
 
 
 @app.route('/generate/<label_name>')
@@ -40,7 +45,7 @@ def generate_password(label_name):
     cipher = blowfish.Cipher(KEY)
     data_encrypted = b"".join(cipher.encrypt_ecb(generate_password())
     fo = open(FILENAME, "a")
-    fo.write(label_name + " " + data_encrypted.decode('utf-8') + '\n'))
+    fo.write(label_name + "," + data_encrypted.decode('utf-8') + '\n'))
     fo.close()
     return "Ok"
 
@@ -52,9 +57,9 @@ def send_to_keyboard (label_name):
     fo = open(FILENAME, "r")
     readfile = fo.read().split('\n')
     for row in readfile:
-        if label_name == row.split()[0]:
+        if label_name == row.split(",")[0]:
             cipher = blowfish.Cipher(KEY)
-            data_decrypted = b"".join(cipher.decrypt_ecb(row.split()[1]).decode('utf-8')
+            data_decrypted = b"".join(cipher.decrypt_ecb(row.split(",")[1]).decode('utf-8')
             break
     coms.send_message(data_decrypted)
     return "Ok"
