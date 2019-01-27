@@ -70,7 +70,7 @@ def send_to_keyboard(label_name):
                 if label_name == row.split(",")[0]:
                     # cipher = blowfish.Cipher(KEY)
                     # data_decrypted = b"".join(cipher.decrypt_ecb(base64.b64decode(row.split(",")[1])))
-                    # coms.send_message(row.split(",")[1])
+                    coms.send_message(row.split(",")[1])
                     print(row.split(",")[1])
                     break
         return "Ok"
