@@ -40,16 +40,16 @@ try:
     for i in range(len(message)):
         pins["clock"].low()
         print("clock low")
-        time.sleep(0.2)
+        time.sleep(0.02)
         if message[i] == 0:
             pins["data"].low()
         else:
             pins["data"].high()
         print("data: " + str(message[i]))
-        time.sleep(0.2)
+        time.sleep(0.02)
         pins["clock"].high()
         print("high")
-        time.sleep(0.3)
+        time.sleep(0.03)
 
 finally:
     GP.cleanup()
