@@ -33,7 +33,7 @@ class NewLabelInput extends Component {
                 Please enter a label for the password that will be generated.
                 <form>
                     <div className="form-group">
-                        <input type="text" className="form-control" aria-describedby="A label fof your password" placeholder="Label"/>
+                        <input type="text" className="form-control" aria-describedby="A label for your password" placeholder="Label"/>
                     </div>
                     <button type="button" className="btn btn-primary">Generate Password For Label</button>
                 </form>
@@ -63,17 +63,17 @@ class SelectionScreen extends Component {
     CurrentState = {
         SendingToKeyboard: "SendingToKeyboard",
         SentToKeyboard: "SentToKeyboard",
-        DoingNothing: "DoingNothing",
-        labelSelected: null
+        DoingNothing: "DoingNothing"
     };
 
     state = {
-        currentState: this.CurrentState.DoingNothing
+        currentState: this.CurrentState.DoingNothing,
+        labelSelected: null
     };
 
     sendToKeyboard = () => {
         this.setState({currentState: this.CurrentState.SendingToKeyboard});
-        request('/to-keyboard/' + this.state.labelSelected, (error, response, body) => {
+        request('http://localhost:5000/to-keyboard/' + this.state.labelSelected, (error, response, body) => {
             console.log('error:', error); // Print the error if one occurred
             console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
             console.log('body:', body); // Print the HTML for the Google homepage.
@@ -100,7 +100,7 @@ class SelectionScreen extends Component {
                 }
                 <br/>
                 <br/>
-                <button type="button" onClick={this.handleGeneratePasswordClick} className="btn btn-primary">Generate New Password</button>
+                <NewLabelInput/>
             </div>
         );
     }
@@ -108,7 +108,7 @@ class SelectionScreen extends Component {
 
 class App extends Component {
     state = {
-        locked: false,
+        locked: true,
         labels: []
     };
 
@@ -123,6 +123,15 @@ class App extends Component {
         });
     };
 
+    checkLocked = () => {
+        request('http://localhost:5000/is-locked', (error, response, body) => {
+            console.log('error:', error); // Print the error if one occurred
+            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+            console.log('body:', body); // Print the HTML for the Google homepage.
+            this.setState({locked: JSON.parse(body).locked});
+        });
+    };
+
     lockScreen = () => {
         request('http://localhost:5000/lock', (error, response, body) => {
             console.log('error:', error); // Print the error if one occurred
@@ -134,10 +143,12 @@ class App extends Component {
 
     componentWillMount() {
         this.updateLabels();
+        this.checkLocked();
     }
 
     componentDidMount() {
         this.updateLabels();
+        this.checkLocked();
     }
 
     render() {
@@ -145,7 +156,7 @@ class App extends Component {
             <div className="App">
                 <header className="App-header">
                     <h1>Dragon Lock</h1>
-                    {this.state.locked ? <LockScreen/> : <SelectionScreen labels={this.state.labels}/>}
+                    {this.state.locked ? <LockScreen handleCorrectPassword={() => {this.setState({locked: false})}} /> : <SelectionScreen labels={this.state.labels}/>}
                     <br/>
                     {!this.state.locked ? <button type="button" onClick={this.lockScreen} className="btn btn-danger">Lock</button> : null}
 
