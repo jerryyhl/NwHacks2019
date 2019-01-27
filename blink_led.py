@@ -19,8 +19,8 @@ try:
         print("beep")
 #       else:
         time.sleep(1)
-        Pin34.low()
-        print("boop")
+#       Pin34.low()
+#       print("boop")
 #       time.sleep(1)
 
 finally:
