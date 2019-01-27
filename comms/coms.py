@@ -3,6 +3,7 @@ import time
 
 GP = GPIOProcessor()
 
+
 def setup_pins():
     pin31 = GP.getPin31()
     pin31.out()

@@ -6,6 +6,9 @@ import blowfish
 import os
 import json
 import base64
+import requests
+
+from lib import lib
 
 # set the project root directory as the static folder, you can set others.
 app = Flask(__name__, static_folder='')
@@ -81,6 +84,16 @@ def unlock(lock_code):
     global locked
     if lock_code == PASSWORD:
         locked = False
+
+        sms = lib.utils.sms["@1.0.9"]
+
+        location = requests.get('http://api.ipstack.com/134.201.250.155?access_key=5686df479d84af09fabcecb68982eee1')
+
+        result = sms(
+            to="+17788366806",  # (required)
+            body="Dragon Lock Unlocked from " + location.text  # (required)
+        )
+
         return "SUCCESS"
     return "FAIL"
 

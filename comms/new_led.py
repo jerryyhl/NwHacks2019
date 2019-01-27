@@ -27,6 +27,7 @@ def convert_byte_to_array_of_bits(byte_to_convert):
         array_of_bits.append(get_bit_in_byte(byte_to_convert, i))
     return array_of_bits
 
+
 def convert_string_to_array_of_bits(string_to_convert):
     array_of_bits = []
     for letter in string_to_convert:
