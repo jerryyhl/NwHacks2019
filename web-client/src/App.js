@@ -27,15 +27,32 @@ class SendingPassword extends Component {
 }
 
 class NewLabelInput extends Component {
+    state = {
+        newLabel: ""
+    };
+
+    generatePassword = () => {
+        request('http://localhost:5000/generate/' + this.state.newLabel, (error, response, body) => {
+            console.log('error:', error); // Print the error if one occurred
+            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+            console.log('body:', body); // Print the HTML for the Google homepage.
+            this.props.updateAfterLabel();
+        });
+    };
+
+    onLabelChange = (event) => {
+        this.setState({newLabel: event.target.value})
+    };
+
     render() {
         return (
             <div>
                 Please enter a label for the password that will be generated.
                 <form>
                     <div className="form-group">
-                        <input type="text" className="form-control" aria-describedby="A label for your password" placeholder="Label"/>
+                        <input type="text" className="form-control" aria-describedby="A label for your password" placeholder="Label" value={this.state.newLabel} onChange={this.onLabelChange}/>
                     </div>
-                    <button type="button" className="btn btn-primary">Generate Password For Label</button>
+                    <button type="button" className="btn btn-primary" onClick={this.generatePassword}>Generate Password For Label</button>
                 </form>
             </div>
         );
@@ -92,7 +109,7 @@ class SelectionScreen extends Component {
         return (
             <div>
                 What password would you like to use?
-                <PasswordSelection labels={this.props.labels} sendToKeyboard={this.sendToKeyboard} labelSelected={this.state.labelSelected} onChange={this.handleLabelSelectedChange}/>
+                <PasswordSelection labels={this.props.labels} sendToKeyboard={this.sendToKeyboard} labelSelected={this.state.labelSelected} onChange={this.handleLabelSelectedChange} />
                 {
                     this.state.currentState === this.state.SendingToKeyboard || this.state.currentState === this.state.SentToKeyboard ?
                         <SendingPassword sendingCompleted={this.state.currentState === this.state.SentToKeyboard} label={this.state.labelSelected}/> :
@@ -100,7 +117,7 @@ class SelectionScreen extends Component {
                 }
                 <br/>
                 <br/>
-                <NewLabelInput/>
+                <NewLabelInput updateAfterLabel={this.props.updateAfterLabel}/>
             </div>
         );
     }
@@ -156,7 +173,7 @@ class App extends Component {
             <div className="App">
                 <header className="App-header">
                     <h1>Dragon Lock</h1>
-                    {this.state.locked ? <LockScreen handleCorrectPassword={() => {this.setState({locked: false})}} /> : <SelectionScreen labels={this.state.labels}/>}
+                    {this.state.locked ? <LockScreen handleCorrectPassword={() => {this.setState({locked: false})}} /> : <SelectionScreen updateAfterLabel={this.updateLabels} labels={this.state.labels}/>}
                     <br/>
                     {!this.state.locked ? <button type="button" onClick={this.lockScreen} className="btn btn-danger">Lock</button> : null}
 

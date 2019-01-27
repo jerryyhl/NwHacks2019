@@ -35,8 +35,8 @@ class LockComponent extends Component {
                     <div className={"form-group"}>
                         <input type="password" className="form-control" onChange={this.handlePasswordChange} value={this.state.password} placeholder="Password"/>
                     </div>
-                    <div className={"invalid-feedback " + (this.state.passwordIncorrect ? "d-none" : "")}>
-                        Sorry, that password is not correct. Please try again.
+                    <div className={"invalid-feedback " + (this.state.passwordIncorrect ? "" : "hidden")}>
+                        <small>Sorry, that password is not correct. Please try again.</small>
                     </div>
                 </form>
                 <button type="button" onClick={this.validatePassword} className="btn btn-primary">Submit</button>
@@ -51,7 +51,7 @@ export class LockScreen extends Component {
             <div>
                 Please unlock the password manager.
                 <br/><br/>
-                <LockComponent/>
+                <LockComponent handleCorrectPassword={this.props.handleCorrectPassword}/>
             </div>
         );
     }
