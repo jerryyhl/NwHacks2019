@@ -6,9 +6,6 @@ export class SelectionBox extends Component {
     };
 
     render() {
-        if (!Array.isArray(this.props.labels)) {
-            throw new Error("Options are not filled out");
-        }
         return (
             <div>
                 <select className="form-control" onChange={this.handleChange} value={this.props.value}>

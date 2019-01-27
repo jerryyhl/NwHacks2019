@@ -21,7 +21,7 @@ class LockComponent extends Component {
             <div>
                 <form>
                     <div className={"form-group " + this.state.passwordIncorrect ? "was-validated" : ""}>
-                        <input type="password" className="form-control" onChange={this.handlePasswordChange} value={this.state.password} aria-describedby="emailHelp" placeholder="Password"/>
+                        <input type="password" className="form-control" onChange={this.handlePasswordChange} value={this.state.password} placeholder="Password"/>
                     </div>
                 </form>
                 <button type="submit" onClick={this.validatePassword} className="btn btn-primary">Submit</button>

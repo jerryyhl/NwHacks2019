@@ -3,6 +3,8 @@ import {SelectionBox} from './SelectionBox';
 import {LockScreen} from './LockScreen';
 import './App.css';
 
+const request = require('request');
+
 class SendingPassword extends Component {
     render() {
         return (
@@ -57,8 +59,6 @@ class PasswordSelection extends Component {
     }
 }
 
-
-
 class SelectionScreen extends Component {
     CurrentState = {
         SendingToKeyboard: "SendingToKeyboard",
@@ -73,12 +73,15 @@ class SelectionScreen extends Component {
 
     sendToKeyboard = () => {
         this.setState({currentState: this.CurrentState.SendingToKeyboard});
-        setTimeout(() => {
+        request('/to-keyboard/' + this.state.labelSelected, (error, response, body) => {
+            console.log('error:', error); // Print the error if one occurred
+            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+            console.log('body:', body); // Print the HTML for the Google homepage.
             this.setState({currentState: this.CurrentState.SentToKeyboard});
             setTimeout(() => {
                 this.setState({currentState: this.CurrentState.DoingNothing});
             }, 3000)
-        }, 3000)
+        });
     };
 
     handleLabelSelectedChange = (value) => {
@@ -106,12 +109,36 @@ class SelectionScreen extends Component {
 class App extends Component {
     state = {
         locked: false,
-        labels: ["GMail", "Apple", "Microsoft", "Telus", "Hootsuite", "stdlib", "Qualcomm"]
+        labels: []
+    };
+
+    updateLabels = () => {
+        request('http://localhost:5000/get-all-labels', (error, response, body) => {
+            console.log('error:', error); // Print the error if one occurred
+            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+            console.log('body:', body); // Print the HTML for the Google homepage.
+            if (Array.isArray(JSON.parse(body))) {
+                this.setState({labels: JSON.parse(body)})
+            }
+        });
     };
 
     lockScreen = () => {
-        this.setState({locked: true})
+        request('http://localhost:5000/lock', (error, response, body) => {
+            console.log('error:', error); // Print the error if one occurred
+            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+            console.log('body:', body); // Print the HTML for the Google homepage.
+            this.setState({locked: true});
+        });
     };
+
+    componentWillMount() {
+        this.updateLabels();
+    }
+
+    componentDidMount() {
+        this.updateLabels();
+    }
 
     render() {
         return (
