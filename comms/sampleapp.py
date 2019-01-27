@@ -31,7 +31,7 @@ def redirect_to_index():
 
 @app.route('/get-all-labels')
 def get_all_labels():
-    fo = open(FILENAME, "r")
+    fo = open(FILENAME, "a+")
     readfile = fo.read().split('\n')
     labels = []
     for row in readfile:
@@ -44,9 +44,9 @@ def generate_password(label_name):
     print(generate.generate_password(), label_name)
     # TODO Encrypt New Generated Password and Save it.
     cipher = blowfish.Cipher(KEY)
-    data_encrypted = b"".join(cipher.encrypt_ecb(generate_password())
+    data_encrypted = b"".join(cipher.encrypt_ecb(bytes(generate.generate_password(), 'utf-8')))
     fo = open(FILENAME, "a")
-    fo.write(label_name + "," + data_encrypted.decode('utf-8') + '\n'))
+    fo.write(label_name + "," + data_encrypted.decode('utf-8') + '\n')
     fo.close()
     return "Ok"
 
@@ -55,12 +55,12 @@ def generate_password(label_name):
 def send_to_keyboard(label_name):
     print(generate.generate_password(), label_name)
     # TODO Decrypt Password assotiated with the Label name and send it to the keyboard
-    fo = open(FILENAME, "r")
+    fo = open(FILENAME, "a+")
     readfile = fo.read().split('\n')
     for row in readfile:
         if label_name == row.split(",")[0]:
             cipher = blowfish.Cipher(KEY)
-            data_decrypted = b"".join(cipher.decrypt_ecb(row.split(",")[1]).decode('utf-8')
+            data_decrypted = b"".join(cipher.decrypt_ecb(row.split(",")[1]).decode('utf-8'))
             break
     # coms.send_message(data_decrypted)
     print(data_decrypted)
